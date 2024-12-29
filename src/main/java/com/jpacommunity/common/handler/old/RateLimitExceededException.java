@@ -1,4 +1,4 @@
-package com.jpacommunity.common.handler.exception;
+package com.jpacommunity.common.handler.old;
 
 public class RateLimitExceededException extends RuntimeException {
     public RateLimitExceededException(String operation, String limit) {
