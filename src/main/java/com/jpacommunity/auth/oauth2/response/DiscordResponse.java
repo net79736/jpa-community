@@ -1,4 +1,4 @@
-package com.jpacommunity.oauth2.response;
+package com.jpacommunity.auth.oauth2.response;
 
 import com.jpacommunity.member.domain.GenderType;
 import org.apache.commons.lang3.StringUtils;
@@ -8,7 +8,7 @@ import java.util.Map;
 
 import static com.jpacommunity.oauth2.constant.OAuth2ServiceProvider.DISCORD;
 
-public class DiscordResponse implements OAuth2Response{
+public class DiscordResponse implements OAuth2Response {
 
     private final Map<String, Object> attribute;
 

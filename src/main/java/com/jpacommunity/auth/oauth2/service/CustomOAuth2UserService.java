@@ -1,11 +1,11 @@
-package com.jpacommunity.oauth2.service;
+package com.jpacommunity.auth.oauth2.service;
 
+import com.jpacommunity.auth.oauth2.response.*;
 import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.member.domain.MemberType;
 import com.jpacommunity.member.entity.Member;
 import com.jpacommunity.member.repository.MemberJpaRepository;
 import com.jpacommunity.oauth2.dto.CustomOAuth2User;
-import com.jpacommunity.oauth2.response.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

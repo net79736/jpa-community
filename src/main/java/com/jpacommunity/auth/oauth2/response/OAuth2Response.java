@@ -1,4 +1,4 @@
-package com.jpacommunity.oauth2.response;
+package com.jpacommunity.auth.oauth2.response;
 
 import com.jpacommunity.member.domain.GenderType;
 
