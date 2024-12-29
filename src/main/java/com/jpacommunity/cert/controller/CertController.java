@@ -1,7 +1,7 @@
-package com.jpacommunity.certification.controller;
+package com.jpacommunity.cert.controller;
 
-import com.jpacommunity.certification.dto.CertificationEmailRequest;
-import com.jpacommunity.certification.service.CertificationService;
+import com.jpacommunity.cert.dto.CertEmailRequest;
+import com.jpacommunity.cert.service.CertService;
 import com.jpacommunity.common.handler.exception.JpaCommunityException;
 import com.jpacommunity.common.web.response.ResponseDto;
 import jakarta.validation.Valid;
@@ -22,21 +22,21 @@ import static com.jpacommunity.common.web.response.ResponseStatus.SUCCESS;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/certification")
-public class CertificationController {
-    private final CertificationService certificationService;
+public class CertController {
+    private final CertService certService;
 
     @PostMapping("/send")
-    public ResponseEntity<?> sendCertificationEmail(@Valid @RequestBody CertificationEmailRequest certificationEmailRequest, BindingResult bindingResult) {
-        log.info("send-certification email: {}", certificationEmailRequest.getEmail());
-         certificationService.send(certificationEmailRequest.getEmail());
+    public ResponseEntity<?> sendCertificationEmail(@Valid @RequestBody CertEmailRequest certEmailRequest, BindingResult bindingResult) {
+        log.info("send-certification email: {}", certEmailRequest.getEmail());
+         certService.send(certEmailRequest.getEmail());
         return new ResponseEntity<>(new ResponseDto<>(SUCCESS.getValue(), "인증 코드 이메일 전송 성공", null), HttpStatus.OK);
     }
 
     @PostMapping("/certify-code")
-    public ResponseEntity<?> certifyCode(@Valid @RequestBody CertificationEmailRequest certificationEmailRequest, BindingResult bindingResult) {
-        String code = certificationEmailRequest.getCode(); // 인증 코드
-        String email = certificationEmailRequest.getEmail(); // 이메일
-        boolean isValid = certificationService.certify(email, code);
+    public ResponseEntity<?> certifyCode(@Valid @RequestBody CertEmailRequest certEmailRequest, BindingResult bindingResult) {
+        String code = certEmailRequest.getCode(); // 인증 코드
+        String email = certEmailRequest.getEmail(); // 이메일
+        boolean isValid = certService.certify(email, code);
 
         if (isValid) {
             log.info("certify email: {} success", email);

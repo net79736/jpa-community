@@ -1,6 +1,6 @@
-package com.jpacommunity.certification.util;
+package com.jpacommunity.cert.util;
 
-import com.jpacommunity.certification.domain.CertificationCode;
+import com.jpacommunity.cert.domain.CertCode;
 import com.jpacommunity.common.handler.exception.JpaCommunityException;
 import com.jpacommunity.common.repository.MailSender;
 import jakarta.mail.MessagingException;
@@ -24,13 +24,13 @@ import static com.jpacommunity.common.handler.exception.ErrorCode.INTERNAL_SERVE
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class CertifyMailSender implements MailSender {
+public class CertMailSender implements MailSender {
 
     @Value("${SENDER_EMAIL}")
     private String senderEmail;
     private final JavaMailSender javaMailSender;
     private static final int EXPIRATION_MINUTES = 5; // 유효 시간 (5분)
-    private final Map<String, CertificationCode> codeStorage = new ConcurrentHashMap<>();
+    private final Map<String, CertCode> codeStorage = new ConcurrentHashMap<>();
 
     // 메일을 보낸다
     @Override
@@ -38,20 +38,20 @@ public class CertifyMailSender implements MailSender {
         log.info("Sending email to {}", email);
 
         // 인증 코드 생성
-        CertificationCode certificationCode = createNumber();
-        codeStorage.put(email, certificationCode); // 이메일별로 인증 코드 저장
+        CertCode certCode = createNumber();
+        codeStorage.put(email, certCode); // 이메일별로 인증 코드 저장
 
         // 이메일 생성 및 발송
-        MimeMessage message = createMail(email, certificationCode.getCode());
+        MimeMessage message = createMail(email, certCode.getCode());
         javaMailSender.send(message);
-        log.info("certificationCode ExpirationTime : {}", certificationCode.getExpirationTime());
+        log.info("certificationCode ExpirationTime : {}", certCode.getExpirationTime());
     }
 
     // 인증번호를 생성한다.
-    private CertificationCode createNumber() {
+    private CertCode createNumber() {
         int code = (int) (Math.random() * 900000) + 100000; // 6자리 인증 코드
         LocalDateTime expirationTime = LocalDateTime.now().plusMinutes(EXPIRATION_MINUTES);
-        return new CertificationCode(String.valueOf(code), expirationTime);
+        return new CertCode(String.valueOf(code), expirationTime);
     }
 
     // 메일 내용을 생성한다.
@@ -76,7 +76,7 @@ public class CertifyMailSender implements MailSender {
 
     // 인증번호가 유효한지 검사한다.
     public boolean isCodeValid(String email, String inputCode) {
-        CertificationCode storedCode = codeStorage.get(email);
+        CertCode storedCode = codeStorage.get(email);
 
         if (storedCode == null || LocalDateTime.now().isAfter(storedCode.getExpirationTime())) {
             return false; // 코드가 없거나 만료된 경우

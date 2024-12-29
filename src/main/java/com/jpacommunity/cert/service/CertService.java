@@ -1,6 +1,6 @@
-package com.jpacommunity.certification.service;
+package com.jpacommunity.cert.service;
 
-import com.jpacommunity.certification.util.CertifyMailSender;
+import com.jpacommunity.cert.util.CertMailSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -8,16 +8,16 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CertificationService {
-    private final CertifyMailSender certifyMailSender;
+public class CertService {
+    private final CertMailSender certMailSender;
 
     public void send(String email) {
-        certifyMailSender.send(email);
+        certMailSender.send(email);
     }
 
     public boolean certify(String email, String certificationCode) {
-        certifyMailSender.print();
-        return certifyMailSender.isCodeValid(email, certificationCode);
+        certMailSender.print();
+        return certMailSender.isCodeValid(email, certificationCode);
     }
 
     public String generateCertificationUrl(String email, String certificationCode) {
