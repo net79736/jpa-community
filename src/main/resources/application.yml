@@ -1,1 +1,3 @@
-spring.application.name=jpa-community
+spring:
+  application:
+    name: jpa-community
