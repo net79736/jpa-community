@@ -1,9 +1,9 @@
 package com.jpacommunity.security.service;
 
+import com.jpacommunity.member.entity.Member;
+import com.jpacommunity.member.repository.MemberJpaRepository;
+import com.jpacommunity.security.dto.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
-import org.myteam.server.global.security.dto.CustomUserDetails;
-import org.myteam.server.member.entity.Member;
-import org.myteam.server.member.repository.MemberJpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static org.myteam.server.member.domain.MemberType.LOCAL;
+import static com.jpacommunity.member.domain.MemberType.LOCAL;
 
 @Service
 @Slf4j
