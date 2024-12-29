@@ -1,10 +1,10 @@
-package com.jpacommunity.security.config;
+package com.jpacommunity.auth.security.config;
 
+import com.jpacommunity.auth.oauth2.service.CustomOAuth2UserService;
 import com.jpacommunity.jwt.repository.RefreshJpaRepository;
 import com.jpacommunity.jwt.util.JwtProvider;
 import com.jpacommunity.oauth2.handler.CustomOauth2SuccessHandler;
 import com.jpacommunity.oauth2.handler.OAuth2LoginFailureHandler;
-import com.jpacommunity.oauth2.service.CustomOAuth2UserService;
 import com.jpacommunity.security.filter.AuthenticationEntryPointHandler;
 import com.jpacommunity.security.filter.CustomAccessDeniedHandler;
 import com.jpacommunity.security.filter.JwtAuthenticationFilter;
