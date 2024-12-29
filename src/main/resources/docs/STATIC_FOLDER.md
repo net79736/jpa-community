@@ -1,0 +1,1 @@
+https://velog.io/@net1506/%EC%A0%95%EC%A0%81-%EB%A6%AC%EC%86%8C%EC%8A%A4spring.mvc.static-path-pattern
