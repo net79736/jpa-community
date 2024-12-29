@@ -21,7 +21,7 @@ import static com.jpacommunity.global.exception.ErrorCode.INVALID_TYPE;
 
 public class UploadFileUtils {
     private static final Logger logger = LoggerFactory.getLogger(UploadFileUtils.class);
-    public static final String UPLOAD_PATH = "/Users/ijong-ug/Documents/GitHub/server/src/main/resources/static/upload"; // 업로드 경로
+    public static final String UPLOAD_PATH = "/Users/ijong-ug/Documents/GitHub/jpa-community/src/main/resources/static/upload"; // 업로드 경로
     // public static final String UPLOAD_PATH = new File("src/main/resources/static").getAbsolutePath(); // 업로드 경로
 
     public static List<String> uploadFile(String uploadPath, String detPath, String originalName, byte[] fileData) throws Exception {

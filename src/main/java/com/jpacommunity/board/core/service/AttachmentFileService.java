@@ -82,7 +82,7 @@ public class AttachmentFileService {
             String thumbnailName = uploadedFileInfo.get(3); // 썸네일 파일 이름
 
             // 업로드된 파일 정보
-            // 파일 이름: /Users/ijong-ug/Documents/GitHub/server/src/main/resources/static/upload/2024/12/29
+            // 파일 이름: /Users/ijong-ug/Documents/GitHub/jpa-community/src/main/resources/static/upload/2024/12/29
             // 파일 경로: 1590461435359_28129.gif
             // UUID 파일 이름: a7c79277-479d-4ad2-9917-32d0561b6520_1590461435359_28129.gif
             log.info("업로드된 파일 정보 - 파일 이름: {}, 파일 경로: {}, UUID 파일 이름: {}, 썸네일 파일 이름: {}", filePath, fileName, savedName, thumbnailName);

@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockPart;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
@@ -122,7 +123,7 @@ class AttachmentControllerTest {
 
         byte[] fileData = m4.getBytes();
 
-        File target = new File("/Users/ijong-ug/Documents/GitHub/server/src/main/resources/static/upload", "test.jql");
+        File target = new File("/Users/ijong-ug/Documents/GitHub/jpa-community/src/main/resources/static/upload", "test.jql");
         FileCopyUtils.copy(fileData, target);
     }
 
@@ -154,7 +155,7 @@ class AttachmentControllerTest {
         // VM 옵션 확인
         String playHiveHome = System.getProperty("playhive.home");
         System.out.println("VM 옵션 - playhive.home: " + playHiveHome);
-        playHiveHome = playHiveHome == null ? "/Users/ijong-ug/Documents/GitHub/server/src/main/resources/static/upload" : playHiveHome;
+        playHiveHome = playHiveHome == null ? "/Users/ijong-ug/Documents/GitHub/jpa-community/src/main/resources/static/upload" : playHiveHome;
 
         // 파일 경로 확인 및 생성 테스트
         File tempDir = new File(playHiveHome, "temp-folder");
