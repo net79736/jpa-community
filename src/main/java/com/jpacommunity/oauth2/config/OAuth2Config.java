@@ -1,10 +1,10 @@
 package com.jpacommunity.oauth2.config;
 
-import com.jpacommunity.common.handler.exception.JpaCommunityException;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 
-import static com.jpacommunity.common.handler.exception.ErrorCode.UNSUPPORTED_OAUTH_PROVIDER;
+import static com.jpacommunity.global.exception.ErrorCode.UNSUPPORTED_OAUTH_PROVIDER;
 import static com.jpacommunity.oauth2.constant.OAuth2ServiceProvider.*;
 
 @Configuration

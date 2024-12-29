@@ -1,6 +1,6 @@
-package com.jpacommunity.common.handler.aop;
+package com.jpacommunity.global.validation.aop;
 
-import com.jpacommunity.common.handler.old.ValidationFailedException;
+import com.jpacommunity.global.exception.old.ValidationFailedException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

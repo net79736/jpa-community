@@ -1,14 +1,9 @@
 package com.jpacommunity.oauth2.service;
 
-import com.jpacommunity.common.handler.exception.ErrorCode;
-import com.jpacommunity.common.handler.exception.JpaCommunityException;
-import com.jpacommunity.common.util.password.PasswordUtil;
-import com.jpacommunity.member.domain.MemberRole;
-import com.jpacommunity.member.domain.MemberStatus;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.member.domain.MemberType;
 import com.jpacommunity.member.entity.Member;
 import com.jpacommunity.member.repository.MemberJpaRepository;
-import com.jpacommunity.oauth2.constant.OAuth2ServiceProvider;
 import com.jpacommunity.oauth2.dto.CustomOAuth2User;
 import com.jpacommunity.oauth2.response.*;
 import lombok.extern.slf4j.Slf4j;
@@ -22,8 +17,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.jpacommunity.common.handler.exception.ErrorCode.UNSUPPORTED_OAUTH_PROVIDER;
-import static com.jpacommunity.common.handler.exception.ErrorCode.USER_ALREADY_EXISTS;
+import static com.jpacommunity.global.exception.ErrorCode.UNSUPPORTED_OAUTH_PROVIDER;
+import static com.jpacommunity.global.exception.ErrorCode.USER_ALREADY_EXISTS;
 import static com.jpacommunity.common.util.password.PasswordUtil.generateRandomPassword;
 import static com.jpacommunity.member.domain.MemberRole.USER;
 import static com.jpacommunity.member.domain.MemberStatus.PENDING;

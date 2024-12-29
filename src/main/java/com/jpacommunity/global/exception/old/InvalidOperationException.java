@@ -1,4 +1,4 @@
-package com.jpacommunity.common.handler.old;
+package com.jpacommunity.global.exception.old;
 
 public class InvalidOperationException extends RuntimeException {
     public InvalidOperationException(String operation, String reason) {

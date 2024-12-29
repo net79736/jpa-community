@@ -1,8 +1,7 @@
 package com.jpacommunity.cert.util;
 
 import com.jpacommunity.cert.domain.CertCode;
-import com.jpacommunity.common.handler.exception.JpaCommunityException;
-import com.jpacommunity.common.repository.MailSender;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static com.jpacommunity.common.handler.exception.ErrorCode.INTERNAL_SERVER_ERROR;
+import static com.jpacommunity.global.exception.ErrorCode.INTERNAL_SERVER_ERROR;
 
 
 @Slf4j

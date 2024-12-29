@@ -1,6 +1,6 @@
 package com.jpacommunity.common.util.file.upload;
 
-import com.jpacommunity.common.handler.exception.JpaCommunityException;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.common.util.file.MediaUtils;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
@@ -17,7 +17,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
-import static com.jpacommunity.common.handler.exception.ErrorCode.INVALID_TYPE;
+import static com.jpacommunity.global.exception.ErrorCode.INVALID_TYPE;
 
 public class UploadFileUtils {
     private static final Logger logger = LoggerFactory.getLogger(UploadFileUtils.class);

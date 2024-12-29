@@ -1,11 +1,9 @@
-package com.jpacommunity.common.handler;
+package com.jpacommunity.global.exception;
 
-import com.jpacommunity.common.handler.exception.JpaCommunityException;
 import com.jpacommunity.common.web.response.ResponseDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

@@ -1,4 +1,4 @@
-package com.jpacommunity.common.repository;
+package com.jpacommunity.cert.util;
 
 public interface MailSender {
     void send (String message);

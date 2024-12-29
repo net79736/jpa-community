@@ -1,4 +1,4 @@
-package com.jpacommunity.common.handler.old;
+package com.jpacommunity.global.exception.old;
 
 // 인증되지 않은 사용자
 public class UnauthorizedException extends RuntimeException {

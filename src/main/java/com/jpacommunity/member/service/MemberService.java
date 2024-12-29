@@ -1,6 +1,6 @@
 package com.jpacommunity.member.service;
 
-import com.jpacommunity.common.handler.exception.JpaCommunityException;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.jwt.util.JwtProvider;
 import com.jpacommunity.member.controller.response.MemberResponse;
 import com.jpacommunity.member.dto.create.MemberCreateRequest;
@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static com.jpacommunity.common.dto.validator.JpaCommunityValidator.validate;
-import static com.jpacommunity.common.handler.exception.ErrorCode.*;
+import static com.jpacommunity.global.exception.ErrorCode.*;
 import static com.jpacommunity.jwt.util.JwtProvider.TOKEN_PREFIX;
 import static com.jpacommunity.member.domain.MemberStatus.PENDING;
 

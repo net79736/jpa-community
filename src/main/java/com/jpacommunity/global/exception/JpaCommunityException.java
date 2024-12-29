@@ -1,4 +1,4 @@
-package com.jpacommunity.common.handler.exception;
+package com.jpacommunity.global.exception;
 
 import lombok.Getter;
 

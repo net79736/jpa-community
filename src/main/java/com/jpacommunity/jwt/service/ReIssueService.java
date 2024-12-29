@@ -1,6 +1,6 @@
 package com.jpacommunity.jwt.service;
 
-import com.jpacommunity.common.handler.exception.JpaCommunityException;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.jwt.domain.Tokens;
 import com.jpacommunity.jwt.entity.Refresh;
 import com.jpacommunity.jwt.repository.RefreshJpaRepository;
@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.jpacommunity.common.handler.exception.ErrorCode.*;
+import static com.jpacommunity.global.exception.ErrorCode.*;
 import static com.jpacommunity.common.util.cookie.CookieUtil.getCookie;
 import static com.jpacommunity.jwt.util.JwtProvider.*;
 

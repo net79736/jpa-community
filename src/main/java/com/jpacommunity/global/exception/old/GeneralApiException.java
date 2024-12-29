@@ -1,4 +1,4 @@
-package com.jpacommunity.common.handler.old;
+package com.jpacommunity.global.exception.old;
 
 
 // 그 외 API 익셉션 처리

@@ -1,6 +1,6 @@
 package com.jpacommunity.jwt.util;
 
-import com.jpacommunity.jwt.config.JwtProperties;
+import com.jpacommunity.jwt.properties.JwtProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;

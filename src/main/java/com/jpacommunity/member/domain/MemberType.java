@@ -1,11 +1,11 @@
 package com.jpacommunity.member.domain;
 
-import com.jpacommunity.common.handler.exception.JpaCommunityException;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.oauth2.constant.OAuth2ServiceProvider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static com.jpacommunity.common.handler.exception.ErrorCode.UNSUPPORTED_OAUTH_PROVIDER;
+import static com.jpacommunity.global.exception.ErrorCode.UNSUPPORTED_OAUTH_PROVIDER;
 
 @AllArgsConstructor
 @Getter

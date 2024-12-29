@@ -1,4 +1,4 @@
-package com.jpacommunity.common.handler.old;
+package com.jpacommunity.global.exception.old;
 
 public class DuplicateResourceException extends RuntimeException {
     public DuplicateResourceException(String resource, String field, String value) {

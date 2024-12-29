@@ -1,6 +1,6 @@
 package com.jpacommunity.jwt.controller;
 
-import com.jpacommunity.common.handler.exception.JpaCommunityException;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.jwt.domain.Tokens;
 import com.jpacommunity.jwt.service.ReIssueService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import static com.jpacommunity.common.handler.exception.ErrorCode.INTERNAL_SERVER_ERROR;
+import static com.jpacommunity.global.exception.ErrorCode.INTERNAL_SERVER_ERROR;
 import static com.jpacommunity.common.util.cookie.CookieUtil.createCookie;
 import static com.jpacommunity.jwt.util.JwtProvider.*;
 

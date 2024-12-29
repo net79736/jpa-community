@@ -2,7 +2,7 @@ package com.jpacommunity.cert.controller;
 
 import com.jpacommunity.cert.dto.CertEmailRequest;
 import com.jpacommunity.cert.service.CertService;
-import com.jpacommunity.common.handler.exception.JpaCommunityException;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.common.web.response.ResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import static com.jpacommunity.common.handler.exception.ErrorCode.UNAUTHORIZED;
+import static com.jpacommunity.global.exception.ErrorCode.UNAUTHORIZED;
 import static com.jpacommunity.common.web.response.ResponseStatus.SUCCESS;
 
 @Slf4j

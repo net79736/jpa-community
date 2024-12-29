@@ -1,6 +1,6 @@
 package com.jpacommunity.member.repository;
 
-import com.jpacommunity.common.handler.exception.JpaCommunityException;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.jpacommunity.common.handler.exception.ErrorCode.RESOURCE_NOT_FOUND;
+import static com.jpacommunity.global.exception.ErrorCode.RESOURCE_NOT_FOUND;
 
 
 @Repository
