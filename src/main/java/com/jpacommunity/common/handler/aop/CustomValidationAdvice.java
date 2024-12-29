@@ -1,6 +1,6 @@
 package com.jpacommunity.common.handler.aop;
 
-import com.jparepeat.common.handler.exception.ValidationFailedException;
+import com.jpacommunity.common.handler.exception.ValidationFailedException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
