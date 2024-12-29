@@ -1,5 +1,7 @@
 package com.jpacommunity.global.validation.aop;
 
+import com.jpacommunity.global.exception.ErrorCode;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.global.exception.old.ValidationFailedException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,6 +14,8 @@ import org.springframework.validation.FieldError;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.jpacommunity.global.exception.ErrorCode.INVALID_PARAMETER;
+
 @Aspect
 @Component
 public class CustomValidationAdvice {
@@ -20,7 +24,9 @@ public class CustomValidationAdvice {
     public void postMapping() {}
     @Pointcut("@annotation(org.springframework.web.bind.annotation.PutMapping)")
     public void putMapping() {}
-    @Pointcut("postMapping() || putMapping()")
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.DeleteMapping)")
+    public void deleteMapping() {}
+    @Pointcut("postMapping() || putMapping() || deleteMapping()")
     public void validationPointcut() {}
 
     @Around("validationPointcut()")
@@ -38,7 +44,7 @@ public class CustomValidationAdvice {
                         errorMap.put(error.getField(), error.getDefaultMessage());
                     }
 
-                    throw new ValidationFailedException("유효성 검사 실패", errorMap);
+                    throw new JpaCommunityException(INVALID_PARAMETER, errorMap);
                 }
             }
         }
