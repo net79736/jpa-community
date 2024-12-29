@@ -1,6 +1,8 @@
 package com.jpacommunity.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jpacommunity.global.exception.ErrorCode;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.jwt.entity.Refresh;
 import com.jpacommunity.jwt.repository.RefreshJpaRepository;
 import com.jpacommunity.jwt.util.JwtProvider;
@@ -26,6 +28,7 @@ import java.time.Duration;
 import java.util.*;
 
 import static com.jpacommunity.common.util.cookie.CookieUtil.createCookie;
+import static com.jpacommunity.global.exception.ErrorCode.IO_EXCEPTION;
 import static com.jpacommunity.jwt.controller.ReIssueController.LOGOUT_PATH;
 import static com.jpacommunity.jwt.controller.ReIssueController.TOKEN_REISSUE_PATH;
 import static com.jpacommunity.jwt.util.JwtProvider.*;
@@ -62,7 +65,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             return authenticationManager.authenticate(authToken);
         } catch (IOException e) {
             log.error("로그인 요청 JSON 파싱 오류", e);
-            throw new RuntimeException(e);
+            throw new JpaCommunityException(IO_EXCEPTION);
         }
     }
 

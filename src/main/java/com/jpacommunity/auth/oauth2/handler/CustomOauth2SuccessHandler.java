@@ -1,5 +1,7 @@
 package com.jpacommunity.oauth2.handler;
 
+import com.jpacommunity.global.exception.ErrorCode;
+import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.jwt.util.JwtProvider;
 import com.jpacommunity.member.entity.Member;
 import com.jpacommunity.member.repository.MemberJpaRepository;
@@ -22,6 +24,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import static com.jpacommunity.common.util.cookie.CookieUtil.createCookie;
+import static com.jpacommunity.global.exception.ErrorCode.USER_NOT_FOUND;
 import static com.jpacommunity.jwt.controller.ReIssueController.LOGOUT_PATH;
 import static com.jpacommunity.jwt.controller.ReIssueController.TOKEN_REISSUE_PATH;
 import static com.jpacommunity.jwt.util.JwtProvider.*;
@@ -56,7 +59,7 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         log.info("onAuthenticationSuccess role: {}", role);
         //유저확인
         Member member = memberJpaRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Member not found"));
+                .orElseThrow(() -> new JpaCommunityException(USER_NOT_FOUND));
         log.info("onAuthenticationSuccess publicId: {}", member.getPublicId());
         log.info("onAuthenticationSuccess role: {}", member.getRole());
 
