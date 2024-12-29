@@ -43,10 +43,10 @@ public class Member extends Base {
     @Column(nullable = false, length = 11)
     private String tel;
 
-    @Column(nullable = false, length = 60)
+    @Column(length = 60)
     private String name;
 
-    @Column(nullable = false, length = 60)
+    @Column(length = 60)
     private String nickname;
 
     // YYYY-MM-dd 형식
