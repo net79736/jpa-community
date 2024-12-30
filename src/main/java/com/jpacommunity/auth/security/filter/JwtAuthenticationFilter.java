@@ -1,4 +1,4 @@
-package com.jpacommunity.security.filter;
+package com.jpacommunity.auth.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jpacommunity.global.exception.ErrorCode;
@@ -34,6 +34,10 @@ import static com.jpacommunity.jwt.controller.ReIssueController.TOKEN_REISSUE_PA
 import static com.jpacommunity.jwt.util.JwtProvider.*;
 import static com.jpacommunity.member.domain.MemberStatus.*;
 
+/**
+ * UsernamePasswordAuthenticationFilter는 기본 URL(/login)을 처리하지만,
+ * setFilterProcessesUrl 메서드를 사용하여 처리 URL을 변경할 수 있습니다.
+ */
 @Slf4j
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
@@ -123,6 +127,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             //Refresh 토큰 저장
             addRefreshEntity(publicId, refreshToken, Duration.ofHours(24));
 
+            /**
+             * HTTP 인증 방식은 RFC 7235 정의에 따라 아래 인증 헤더 형태를 가져야 한다.
+             * Authorization: 타입 인증토큰
+             *
+             * //예시
+             * Authorization: Bearer 인증토큰 string
+             */
             response.addHeader(HEADER_AUTHORIZATION, TOKEN_PREFIX + accessToken);
             response.addCookie(createCookie(REFRESH_TOKEN_KEY, cookieValue, TOKEN_REISSUE_PATH, 24 * 60 * 60, true));
             response.addCookie(createCookie(REFRESH_TOKEN_KEY, cookieValue, LOGOUT_PATH, 24 * 60 * 60, true));
