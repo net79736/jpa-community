@@ -38,7 +38,7 @@ public class PostController {
     public ResponseEntity<ResponseDto<PostResponse>> create(
             @Valid @RequestPart("postCreateRequest") PostCreateRequest postCreateRequest,
             BindingResult bindingResult,
-            @RequestPart(value = "file", required = false) List<MultipartFile> files
+            @RequestPart(value = "files", required = false) List<MultipartFile> files
     ) {
         log.info("PostController create START");
         log.info("PostController create Content : {}", postCreateRequest.getContent());
@@ -69,7 +69,13 @@ public class PostController {
 
     // UPDATE: 게시글 수정
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDto<PostResponse>> update(@PathVariable Long id, @Valid @RequestBody PostUpdateRequest postUpdateRequest) {
+    public ResponseEntity<ResponseDto<PostResponse>> update(
+            @PathVariable Long id,
+            @Valid @RequestBody PostUpdateRequest postUpdateRequest,
+            BindingResult bindingResult,
+            @RequestPart(value = "newFiles", required = false) List<MultipartFile> newFiles, // 새로 추가될 파일
+            @RequestPart(value = "deleteFileIds", required = false) List<Long> deleteFileIds // 삭제할 파일 ID 목록
+    ) {
         log.info("PostController update START");
         log.info("PostController update ID: {}", id);
         log.info("PostController update Content: {}", postUpdateRequest.getContent());
