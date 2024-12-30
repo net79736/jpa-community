@@ -153,12 +153,12 @@ class AttachmentControllerTest {
     @Test
     public void tmp_dir_create_test() throws Exception {
         // VM 옵션 확인
-        String playHiveHome = System.getProperty("playhive.home");
-        System.out.println("VM 옵션 - playhive.home: " + playHiveHome);
-        playHiveHome = playHiveHome == null ? "/Users/ijong-ug/Documents/GitHub/jpa-community/src/main/resources/static/upload" : playHiveHome;
+        String communityHome = System.getProperty("community.home");
+        System.out.println("VM 옵션 - Jpacommunity.home: " + communityHome);
+        communityHome = communityHome == null ? "/Users/ijong-ug/Documents/GitHub/jpa-community/src/main/resources/static/upload" : communityHome;
 
         // 파일 경로 확인 및 생성 테스트
-        File tempDir = new File(playHiveHome, "temp-folder");
+        File tempDir = new File(communityHome, "temp-folder");
         if (!tempDir.exists()) {
             if (tempDir.mkdirs()) {
                 System.out.println("임시 디렉토리를 생성했습니다: " + tempDir.getAbsolutePath());

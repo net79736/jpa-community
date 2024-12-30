@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
     // 500 Server Error
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "PlayHive Server Error"),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "JpaCommunity Server Error"),
     API_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "API Server Error"),
     IO_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "File I/O operation failed"),
 

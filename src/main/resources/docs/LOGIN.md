@@ -25,7 +25,7 @@ graph TD
 ### 3. 계정을 관리자 권한으로 변경하고 싶은 경우
 ```mermaid
 graph TD
-    A((권한 변경 방법\n ADMIN, USER)) --> B[사전에 환경 변수 등록 필요\n PLAYHIVE_CLIENT_ID 와 PLAYHIVE_CLIENT_SECRET\n 보안용 코드 값\n]
+    A((권한 변경 방법\n ADMIN, USER)) --> B[사전에 환경 변수 등록 필요\n JPA_COMMUNICATION_CLIENT_ID 와 JPA_COMMUNICATION_CLIENT_SECRET\n 보안용 코드 값\n]
     B --> C[최초 회원가입 후 상태: PENDING, 권한: USER]
     C --> D[권한 변경 API 호출]
     D --> E{clientId, secretKey 유효성 확인}
@@ -37,9 +37,9 @@ graph TD
     J --> K((응답 완료))
 ```
 
-### 4. PLAYHIVE_CLIENT_ID 와 PLAYHIVE_CLIENT_SECRET 값
-PLAYHIVE_CLIENT_ID: 1ZDYmrYNwVcioFZNKVQ5VSqylF
-PLAYHIVE_CLIENT_SECRET: RK1j0C33CUexMs
+### 4. JPA_COMMUNICATION_CLIENT_ID 와 JPA_COMMUNICATION_CLIENT_SECRET 값
+JPA_COMMUNICATION_CLIENT_ID: 1ZDYmrYNwVcioFZNKVQ5VSqylF
+JPA_COMMUNICATION_CLIENT_SECRET: RK1j0C33CUexMs
 
 ### 5. 로그인 절차 없이 토큰 발급 방법
 Swagger UI 에서 /api/members/get-token/user/{email}[GET] 해당 메서드를 사용하여 토큰 발급이 가능합니다.

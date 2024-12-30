@@ -1,8 +1,6 @@
 package com.jpacommunity.common.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -21,4 +19,16 @@ public class BaseTime {
     @LastModifiedDate
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
+
+    @PrePersist
+    public void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createDate = now;
+        this.lastModifiedDate = now;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        lastModifiedDate = LocalDateTime.now();
+    }
 }

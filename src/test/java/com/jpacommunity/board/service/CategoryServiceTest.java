@@ -332,9 +332,9 @@ class CategoryServiceTest {
 
         // when
         // then
-        JpaCommunityException playHiveException = assertThrows(JpaCommunityException.class, () -> categoryService.create(categoryCreate));
-        String message = playHiveException.getMessage();
-        ErrorCode errorCode = playHiveException.getErrorCode();
+        JpaCommunityException jpaCommunicationException = assertThrows(JpaCommunityException.class, () -> categoryService.create(categoryCreate));
+        String message = jpaCommunicationException.getMessage();
+        ErrorCode errorCode = jpaCommunicationException.getErrorCode();
         assertThat(message).isEqualTo("Invalid parameter value");
         assertThat(errorCode).isEqualTo(INVALID_PARAMETER);
     }
@@ -350,9 +350,9 @@ class CategoryServiceTest {
                 .build();
         // when
         // then
-        JpaCommunityException playHiveException = assertThrows(JpaCommunityException.class, () -> categoryService.create(categoryCreate));
-        String message = playHiveException.getMessage();
-        ErrorCode errorCode = playHiveException.getErrorCode();
+        JpaCommunityException jpaCommunicationException = assertThrows(JpaCommunityException.class, () -> categoryService.create(categoryCreate));
+        String message = jpaCommunicationException.getMessage();
+        ErrorCode errorCode = jpaCommunicationException.getErrorCode();
         assertThat(message).isEqualTo("Invalid parameter value");
         assertThat(errorCode).isEqualTo(INVALID_PARAMETER);
     }

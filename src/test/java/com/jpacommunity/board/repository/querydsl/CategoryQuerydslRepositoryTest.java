@@ -115,12 +115,12 @@ class CategoryQuerydslRepositoryTest {
         // given
         // when
         // then
-        JpaCommunityException playHiveException = assertThrows(JpaCommunityException.class, () -> categoryRepository.getByParentIdAndOrderIndex(111L, 2));
+        JpaCommunityException jpaCommunicationException = assertThrows(JpaCommunityException.class, () -> categoryRepository.getByParentIdAndOrderIndex(111L, 2));
 
-        String message = playHiveException.getMessage();
-        ErrorCode errorCode = playHiveException.getErrorCode();
+        String message = jpaCommunicationException.getMessage();
+        ErrorCode errorCode = jpaCommunicationException.getErrorCode();
         assertThat(message).isEqualTo("parentId -> 111, orderIndex -> 2 는 존재하지 않는 카테고리 입니다");
-        assertThat(errorCode).isEqualTo(playHiveException.getErrorCode());
+        assertThat(errorCode).isEqualTo(jpaCommunicationException.getErrorCode());
     }
 
     @Test

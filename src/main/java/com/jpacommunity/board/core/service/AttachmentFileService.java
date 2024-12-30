@@ -40,6 +40,7 @@ public class AttachmentFileService {
         return null;
     }
 
+    @Transactional
     public void create(List<MultipartFile> files, List<AttachmentRequest> attachmentRequests) throws Exception {
         log.info("파일 업로드를 시작합니다. attachmentRequests Number: {}", attachmentRequests.size());
 
@@ -192,6 +193,7 @@ public class AttachmentFileService {
         return attachmentRequests;
     }
 
+    @Transactional
     public void delete(Long id) {
 
     }

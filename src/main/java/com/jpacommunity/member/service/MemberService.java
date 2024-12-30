@@ -133,7 +133,7 @@ public class MemberService {
     @Transactional
     public MemberResponse updateRole(MemberRoleUpdateRequest memberRoleUpdateRequest) {
         boolean isValid = validate(memberRoleUpdateRequest);
-        log.info("playHive updateRole isValid: {}", isValid);
+        log.info("JpaCommunication updateRole isValid: {}", isValid);
 
         if (!isValid) {
               // 빈 Response 객체 반환

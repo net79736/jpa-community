@@ -40,7 +40,8 @@ public class MyInfoController {
     private final JwtProvider jwtProvider;
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody @Valid MemberCreateRequest memberCreateRequest,
+    public ResponseEntity<?> create(
+                                    @RequestBody @Valid MemberCreateRequest memberCreateRequest,
                                     BindingResult bindingResult,
                                     HttpServletResponse httpServletResponse
     ) {

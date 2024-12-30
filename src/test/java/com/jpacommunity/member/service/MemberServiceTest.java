@@ -151,7 +151,7 @@ class MemberServiceTest {
 
     // END 는 자동 완성 후 커서 위치
     @Test
-    @DisplayName("존재하지 않는 계정을 조회 시 서비스 단에서 PlayHiveException 을 반환한다.")
+    @DisplayName("존재하지 않는 계정을 조회 시 서비스 단에서 jpaCommunicationException 을 반환한다.")
     public void select_test() throws Exception {
         // given
         String jwtToken = getAccessToken();
@@ -286,13 +286,13 @@ class MemberServiceTest {
 //    public MemberResponse getByEmail(String email) {
 //        return memberRepository.findByEmail(email)
 //                .map(MemberResponse::new)
-//                .orElseThrow(() -> new PlayHiveException(email + " 는 존재하지 않는 이메일 입니다"));
+//                .orElseThrow(() -> new jpaCommunicationException(email + " 는 존재하지 않는 이메일 입니다"));
 //    }
 //
 //    public MemberResponse getByNickname(String nickname) {
 //        return memberRepository.findByNickname(nickname)
 //                .map(MemberResponse::new)
-//                .orElseThrow(() -> new PlayHiveException(nickname + " 는 존재하지 않는 닉네임 입니다"));
+//                .orElseThrow(() -> new jpaCommunicationException(nickname + " 는 존재하지 않는 닉네임 입니다"));
 //    }
 
     private String getRefreshToken() {

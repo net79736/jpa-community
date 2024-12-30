@@ -34,8 +34,8 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("PlayHive API")
-                .description("PlayHive API Documentation")
+                .title("JpaCommunication API")
+                .description("JpaCommunication API Documentation")
                 .version("1.0.0");
     }
 }

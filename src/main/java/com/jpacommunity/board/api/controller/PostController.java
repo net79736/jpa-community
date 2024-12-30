@@ -8,16 +8,16 @@ import com.jpacommunity.board.core.service.AttachmentFileService;
 import com.jpacommunity.board.core.service.PostService;
 import com.jpacommunity.common.web.response.ResponseDto;
 import com.jpacommunity.global.exception.JpaCommunityException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 import static com.jpacommunity.common.web.response.ResponseStatus.SUCCESS;
@@ -34,20 +34,28 @@ public class PostController {
     private final AttachmentFileService attachmentFileService;
 
     // CREATE: 카테고리 생성
-    @PostMapping
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ResponseDto<PostResponse>> create(
-            @RequestPart("postCreateRequest") @Valid PostCreateRequest postCreateRequest,
-            @RequestPart(value = "file", required = false) List<MultipartFile> files,
-            HttpServletRequest request
+            @Valid @RequestPart("postCreateRequest") PostCreateRequest postCreateRequest,
+            BindingResult bindingResult,
+            @RequestPart(value = "file", required = false) List<MultipartFile> files
     ) {
         log.info("PostController create START");
+        log.info("PostController create Content : {}", postCreateRequest.getContent());
+        log.info("PostController create Title : {}", postCreateRequest.getTitle());
+        log.info("PostController create CategoryId : {}", postCreateRequest.getCategoryId());
         PostResponse postResponse = null;
-        List<AttachmentRequest> attachmentRequests = Collections.emptyList();
 
         try {
+            // 게시물 데이터 작성
             postResponse = postService.create(postCreateRequest);
-            attachmentRequests = attachmentFileService.generateAttachmentRequests(postResponse.getId(), files);
-            attachmentFileService.create(files, attachmentRequests);
+
+            // 첨부파일 업로드
+            if (files != null && !files.isEmpty()) {
+                System.out.println("여기 들어온다고요 ????");
+                List<AttachmentRequest> attachmentRequests = attachmentFileService.generateAttachmentRequests(postResponse.getId(), files);
+                attachmentFileService.create(files, attachmentRequests);
+            }
         } catch (IOException e) {
             log.error("파일 업로드 도중 I/O 에러가 발생하였습니다. errorMessage: {}", e.getMessage());
             throw new JpaCommunityException(IO_EXCEPTION);
