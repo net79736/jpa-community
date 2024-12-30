@@ -41,25 +41,35 @@ public class AttachmentFileService {
     }
 
     @Transactional
-    public void create(List<MultipartFile> files, List<AttachmentRequest> attachmentRequests) throws Exception {
+    public List<Attachment> create(List<MultipartFile> files, List<AttachmentRequest> attachmentRequests) throws Exception {
         log.info("파일 업로드를 시작합니다. attachmentRequests Number: {}", attachmentRequests.size());
 
         // 파일 이름과 저장 경로를 매핑하는 맵
         Map<String, String> uploadedFilePaths = new HashMap<>();
-        // 실제 파일 이름과 UUID 파일 이름를 매핑하는 맵
+        // 파일 이름과 UUID 파일 이름를 매핑하는 맵
         Map<String, String> uploadedFileUuidNames = new HashMap<>();
+        // 파일 이름과 썸네일 파일 이름를 매핑하는 맵
         Map<String, String> thumbnailFileNames = new HashMap<>();
 
         // 파일 업로드 수행
         manageFileUpload(files, uploadedFilePaths, uploadedFileUuidNames, thumbnailFileNames);
 
-        // Attachment 생성 및 저장
-        saveAttachments(attachmentRequests, uploadedFilePaths, uploadedFileUuidNames, thumbnailFileNames);
+        // 업로드 파일 메타 데이터 생성 및 저장
+        List<Attachment> attachments = saveAttachments(attachmentRequests, uploadedFilePaths, uploadedFileUuidNames, thumbnailFileNames);
 
         log.info("파일 업로드 및 첨부파일 저장 작업이 완료되었습니다.");
-//        return new AttachmentResponse("성공적으로 처리되었습니다.");
+        return attachments;
     }
 
+    /**
+     * 파일 목록을 순회하며 업로드 한다.
+     *
+     * @param files 업로드 파일 목록
+     * @param pathMap 파일 이름과 저장 경로를 매핑하는 맵
+     * @param fileMap 파일 이름과 UUID 파일 이름를 매핑하는 맵
+     * @param thumbNailMap 파일 이름과 썸네일 파일 이름를 매핑하는 맵
+     * @throws Exception
+     */
     private void manageFileUpload(
             List<MultipartFile> files,
             Map<String, String> pathMap,
@@ -77,6 +87,7 @@ public class AttachmentFileService {
 
             // 파일 업로드
             List<String> uploadedFileInfo = uploadFile(UPLOAD_PATH, "", originalFilename, file.getBytes());
+
             String filePath = uploadedFileInfo.get(0); // 오리지날 파일 이름
             String fileName = uploadedFileInfo.get(1); // 파일 업로드 경로
             String savedName = uploadedFileInfo.get(2); // UUID 파일 이름
@@ -88,18 +99,47 @@ public class AttachmentFileService {
             // UUID 파일 이름: a7c79277-479d-4ad2-9917-32d0561b6520_1590461435359_28129.gif
             log.info("업로드된 파일 정보 - 파일 이름: {}, 파일 경로: {}, UUID 파일 이름: {}, 썸네일 파일 이름: {}", filePath, fileName, savedName, thumbnailName);
 
-            pathMap.put(originalFilename, filePath);
-            fileMap.put(originalFilename, savedName);
-            thumbNailMap.put(originalFilename, thumbnailName);
+            // 파일 정보를 Map 에 추가하는 메서드
+            updateFileMaps(pathMap, fileMap, thumbNailMap, originalFilename, filePath, savedName, thumbnailName);
         }
     }
 
-    private void saveAttachments(
+    /**
+     * 파일 정보를 Map에 추가하는 메서드
+     *
+     * @param pathMap 파일 이름과 저장 경로를 매핑하는 맵
+     * @param fileMap 파일 이름과 UUID 파일 이름를 매핑하는 맵
+     * @param thumbNailMap 파일 이름과 썸네일 파일 이름를 매핑하는 맵
+     * @param originalFilename 파일 원본 이름
+     * @param filePath 파일 경로
+     * @param savedName UUID 파일 이름
+     * @param thumbnailName 썸네일 파일 이름
+     */
+    private void updateFileMaps(
+            Map<String, String> pathMap,
+            Map<String, String> fileMap,
+            Map<String, String> thumbNailMap,
+            String originalFilename,
+            String filePath,
+            String savedName,
+            String thumbnailName
+    ) {
+        // pathMap.put(originalFilename, filePath);
+        // fileMap.put(originalFilename, savedName);
+        // thumbNailMap.put(originalFilename, thumbnailName);
+        pathMap.put(originalFilename, filePath);
+        fileMap.put(originalFilename, savedName);
+        thumbNailMap.put(originalFilename, thumbnailName);
+    }
+
+    private List<Attachment> saveAttachments(
             List<AttachmentRequest> attachmentRequests,
             Map<String, String> uploadedFilePaths,
             Map<String, String> uploadedFileUuidNames,
             Map<String, String> thumbnailFileNames
     ) {
+        List<Attachment> attachments = new ArrayList<>();
+
         for (AttachmentRequest attachmentRequest : attachmentRequests) {
             // Attachment 객체 생성
             Attachment attachment = prepareAttachment(attachmentRequest, uploadedFilePaths, uploadedFileUuidNames, thumbnailFileNames);
@@ -110,10 +150,12 @@ public class AttachmentFileService {
             attachment.updatePost(post);
 
             // Attachment 저장
-            attachmentJpaRepository.save(attachment);
+            Attachment savedAttachment = attachmentJpaRepository.save(attachment);
+            attachments.add(savedAttachment);
 
             log.info("Attachment 저장 완료. 파일 이름: {}, 경로: {}", attachment.getOriginalFilename(), attachment.getFilepath());
         }
+        return attachments;
     }
 
     /**

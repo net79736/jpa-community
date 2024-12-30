@@ -73,4 +73,8 @@ public class PostService {
             throw new JpaCommunityException(INVALID_PARAMETER, errorMap);
         }
     }
+
+    public Post get(long id) {
+        return postJpaRepository.getOne(id);
+    }
 }

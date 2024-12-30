@@ -33,7 +33,7 @@ public class PostController {
     private final PostService postService;
     private final AttachmentFileService attachmentFileService;
 
-    // CREATE: 카테고리 생성
+    // CREATE: 게시글 생성
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ResponseDto<PostResponse>> create(
             @Valid @RequestPart("postCreateRequest") PostCreateRequest postCreateRequest,
@@ -52,8 +52,9 @@ public class PostController {
 
             // 첨부파일 업로드
             if (files != null && !files.isEmpty()) {
-                System.out.println("여기 들어온다고요 ????");
+                // 첨부 파일 객체 생성
                 List<AttachmentRequest> attachmentRequests = attachmentFileService.generateAttachmentRequests(postResponse.getId(), files);
+                // 저장
                 attachmentFileService.create(files, attachmentRequests);
             }
         } catch (IOException e) {
@@ -66,21 +67,38 @@ public class PostController {
         return ResponseEntity.ok(new ResponseDto<>(SUCCESS.getValue(), "게시글 작성 성공", postResponse));
     }
 
-    // UPDATE: 카테고리 수정
+    // UPDATE: 게시글 수정
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDto<PostResponse>> update(@PathVariable Long id, @Valid @RequestBody PostUpdateRequest postUpdateRequest) {
-        postService.update(postUpdateRequest);
-        return ResponseEntity.ok(new ResponseDto<>(SUCCESS.getValue(), "게시글 수정 성공", null));
+        log.info("PostController update START");
+        log.info("PostController update ID: {}", id);
+        log.info("PostController update Content: {}", postUpdateRequest.getContent());
+
+        try {
+            PostResponse postResponse = postService.update(postUpdateRequest);
+            return ResponseEntity.ok(new ResponseDto<>(SUCCESS.getValue(), "게시글 수정 성공", postResponse));
+        } catch (Exception e) {
+            log.error("게시글 수정 도중 에러가 발생하였습니다. errorMessage: {}", e.getMessage());
+            throw new JpaCommunityException(INTERNAL_SERVER_ERROR);
+        }
     }
 
-    // DELETE: 카테고리 삭제
+    // DELETE: 게시글 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDto<Void>> delete(@PathVariable Long id) {
-        postService.delete(id);
-        return ResponseEntity.ok(new ResponseDto<>(SUCCESS.getValue(), "게시글 삭제 성공", null));
+        log.info("PostController delete START");
+        log.info("PostController delete ID: {}", id);
+
+        try {
+            postService.delete(id);
+            return ResponseEntity.ok(new ResponseDto<>(SUCCESS.getValue(), "게시글 삭제 성공", null));
+        } catch (Exception e) {
+            log.error("게시글 삭제 도중 에러가 발생하였습니다. errorMessage: {}", e.getMessage());
+            throw new JpaCommunityException(INTERNAL_SERVER_ERROR);
+        }
     }
 
-    // READ: 단일 카테고리 조회
+    // READ: 단일 게시글 조회
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDto<PostResponse>> get(@PathVariable Long id) {
         // PostResponse response = postService.getById(id);
@@ -91,11 +109,5 @@ public class PostController {
     public ResponseEntity<ResponseDto<List<PostResponse>>> list() {
         // final List<PostResponse> categories = postService.getAllCategories();
         return ResponseEntity.ok(new ResponseDto<>(SUCCESS.getValue(), "게시글 목록 조회 성공", null));
-    }
-
-    @GetMapping("/roots")
-    public ResponseEntity<ResponseDto<List<PostResponse>>> getRootCategories() {
-        // List<PostResponse> rootCategories = postService.getRootCategories();
-        return ResponseEntity.ok(new ResponseDto<>(SUCCESS.getValue(), "게시글 조회 성공", null));
     }
 }
