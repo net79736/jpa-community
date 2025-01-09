@@ -115,6 +115,7 @@ class MemberControllerTest {
         // given
         MemberCreateRequest memberSaveRequest = MemberCreateRequest.builder()
                 .email("teamplayhybe@gmail.com")
+                .nickname("jongwook")
                 .password("jongwook234")
                 .tel("01088876666")
                 .build();
