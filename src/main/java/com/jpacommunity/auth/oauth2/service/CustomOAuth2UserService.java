@@ -1,6 +1,7 @@
 package com.jpacommunity.auth.oauth2.service;
 
 import com.jpacommunity.auth.oauth2.response.*;
+import com.jpacommunity.global.exception.ExistingUserAuthenticationException;
 import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.member.domain.MemberType;
 import com.jpacommunity.member.entity.Member;
@@ -95,7 +96,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return new CustomOAuth2User(member.getEmail(), member.getRole().name(), member.getPublicId(), member.getStatus());
         } else {
             // 로컬 이메일 계정으로 존재하는 유저
-            throw new JpaCommunityException(USER_ALREADY_EXISTS);
+            throw new ExistingUserAuthenticationException(
+                    "로컬 이메일 계정으로 이미 가입된 이메일입니다: " + maskEmail(oAuth2Response.getEmail())
+            );
         }
     }
 
@@ -144,5 +147,25 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             default:
                 return null;
         }
+    }
+
+    private String maskEmail(String email) {
+        if (email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("Invalid email address");
+        }
+
+        // 이메일 분리 (아이디와 도메인 부분)
+        int atIndex = email.indexOf("@");
+        String localPart = email.substring(0, atIndex); // 아이디 부분
+        String domainPart = email.substring(atIndex);  // 도메인 부분
+
+        // 아이디의 앞 3글자는 유지, 나머지는 '*'로 마스킹
+        if (localPart.length() <= 3) {
+            return localPart + domainPart;
+        }
+
+        String visiblePart = localPart.substring(0, 3); // 앞 3글자
+        String maskedPart = "*".repeat(localPart.length() - 3); // 나머지는 '*'
+        return visiblePart + maskedPart + domainPart;
     }
 }
