@@ -3,6 +3,7 @@ package com.jpacommunity.member.controller;
 
 import com.jpacommunity.common.web.response.ResponseDto;
 import com.jpacommunity.member.controller.response.MemberResponse;
+import com.jpacommunity.member.domain.MemberType;
 import com.jpacommunity.member.dto.exist.ExistMemberRequest;
 import com.jpacommunity.member.dto.update.MemberRoleUpdateRequest;
 import com.jpacommunity.member.dto.update.MemberStatusUpdateRequest;
@@ -85,5 +86,12 @@ public class MemberController {
         MemberResponse response = memberService.getByEmail(email);
         String encode = TOKEN_PREFIX + jwtProvider.generateToken(TOKEN_CATEGORY_ACCESS, Duration.ofHours(10), response.getPublicId(), response.getRole().name(), response.getStatus().name());
         return new ResponseEntity<>(new ResponseDto<>(SUCCESS.getValue(), "토큰 조회 성공", encode), HttpStatus.OK);
+    }
+
+    @GetMapping("/type/{email}")
+    public ResponseEntity<?> getMemberType(@PathVariable String email) {
+        log.info("MemberController getMemberType 메서드 실행: {}", email);
+        MemberType memberType = memberService.getMemberTypeByEmail(email);
+        return ResponseEntity.ok(new ResponseDto<>(SUCCESS.getValue(), "회원 타입 조회 성공", memberType));
     }
 }

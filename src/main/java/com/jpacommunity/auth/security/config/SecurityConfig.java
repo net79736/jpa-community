@@ -141,6 +141,7 @@ public class SecurityConfig {
 
                     .requestMatchers("/api/admin/**").hasAnyAuthority(ADMIN.name())
                     .requestMatchers(HttpMethod.POST, "/api/me/create").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/members/type/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasAnyAuthority(ADMIN.name())
                     .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasAnyAuthority(ADMIN.name())

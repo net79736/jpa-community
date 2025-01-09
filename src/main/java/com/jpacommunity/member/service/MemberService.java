@@ -3,6 +3,7 @@ package com.jpacommunity.member.service;
 import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.jwt.util.JwtProvider;
 import com.jpacommunity.member.controller.response.MemberResponse;
+import com.jpacommunity.member.domain.MemberType;
 import com.jpacommunity.member.dto.create.MemberCreateRequest;
 import com.jpacommunity.member.dto.update.MemberRoleUpdateRequest;
 import com.jpacommunity.member.dto.update.MemberStatusUpdateRequest;
@@ -232,5 +233,11 @@ public class MemberService {
         String accessToken = jwtProvider.getAccessToken(authorizationHeader);
         UUID publicId = jwtProvider.getPublicId(accessToken);
         return getByPublicId(publicId);
+    }
+
+    public MemberType getMemberTypeByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .map(Member::getType)
+                .orElse(null);
     }
 }
