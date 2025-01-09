@@ -4,6 +4,7 @@ package com.jpacommunity.board.core.entity;
 import com.jpacommunity.board.api.dto.PostCreateRequest;
 import com.jpacommunity.board.api.dto.PostUpdateRequest;
 import com.jpacommunity.common.domain.Base;
+import com.jpacommunity.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,10 +32,15 @@ public class Post extends Base {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category; // 게시물의 카테고리
 
-    public Post(PostCreateRequest postCreateRequest, Category category) {
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    public Post(PostCreateRequest postCreateRequest, Category category, Member member) {
         this.title = postCreateRequest.getTitle();
         this.content = postCreateRequest.getContent();
         this.category = category;
+        this.member = member;
     }
 
     public Post(PostUpdateRequest postUpdateRequest, Category category) {

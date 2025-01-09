@@ -4,8 +4,7 @@ import com.jpacommunity.board.api.controller.response.CategoryResponse;
 import com.jpacommunity.board.api.dto.CategoryCreateRequest;
 import com.jpacommunity.board.api.dto.CategoryUpdateRequest;
 import com.jpacommunity.board.core.entity.Category;
-import com.jpacommunity.board.core.repository.CategoryJpaRepository;
-import com.jpacommunity.board.core.repository.CategoryRepository;
+import com.jpacommunity.board.core.repository.category.CategoryRepository;
 import com.jpacommunity.board.core.service.CategoryService;
 import com.jpacommunity.global.exception.ErrorCode;
 import com.jpacommunity.global.exception.JpaCommunityException;
@@ -45,8 +44,8 @@ class CategoryServiceTest {
     @Autowired
     CategoryRepository categoryRepository;
 
-    @Autowired
-    CategoryJpaRepository categoryJpaRepository;
+//    @Autowired
+//    CategoryRepository categoryRepository;
 
     @Autowired
     EntityManager entityManager;
@@ -136,7 +135,7 @@ class CategoryServiceTest {
         Long deleteId = 2L; // 삭제할 최상위 카테고리 ID ("농구")
 
         // 삭제 전 상태: 최상위 카테고리 목록
-        List<Category> beforeDelete = categoryRepository.listByParentIsNull();
+        List<Category> beforeDelete = categoryRepository.findByParentIsNull();
         System.out.println("삭제 전 상태:");
         beforeDelete.forEach(category ->
                 System.out.println(category.getName() + " -> " + category.getOrderIndex())
@@ -147,7 +146,7 @@ class CategoryServiceTest {
 
         // then
         // 삭제 후 상태: 최상위 카테고리 목록
-        List<Category> afterDelete = categoryRepository.listByParentIsNull();
+        List<Category> afterDelete = categoryRepository.findByParentIsNull();
         System.out.println("\n삭제 후 상태:");
         afterDelete.forEach(category ->
                 System.out.println(category.getName() + " -> " + category.getOrderIndex())

@@ -4,9 +4,7 @@ import com.jpacommunity.board.api.controller.response.CategoryResponse;
 import com.jpacommunity.board.api.dto.CategoryCreateRequest;
 import com.jpacommunity.board.api.dto.CategoryUpdateRequest;
 import com.jpacommunity.board.core.entity.Category;
-import com.jpacommunity.board.core.repository.CategoryJpaRepository;
-import com.jpacommunity.board.core.repository.CategoryQuerydslRepository;
-import com.jpacommunity.board.core.repository.CategoryRepository;
+import com.jpacommunity.board.core.repository.category.CategoryRepository;
 import com.jpacommunity.global.exception.JpaCommunityException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,16 +24,12 @@ import static com.jpacommunity.global.exception.ErrorCode.*;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
-    private final CategoryJpaRepository categoryJpaRepository;
-
-    private final CategoryQuerydslRepository categoryQuerydslRepository;
-
     @Transactional
     public CategoryResponse create(CategoryCreateRequest categoryCreateRequest) {
         Category categoryEntity = new Category(categoryCreateRequest);
 
         if (categoryCreateRequest.getParentId() != null) {
-            Category parentCategory = categoryRepository.getById(categoryCreateRequest.getParentId()); // 부모 카테고리 Entity 조회
+            Category parentCategory = fetchById(categoryCreateRequest.getParentId()); // 부모 카테고리 Entity 조회
             Integer depth = categoryCreateRequest.getDepth();
             Integer parentDepth = parentCategory.getDepth();
 
@@ -57,17 +51,17 @@ public class CategoryService {
                 throw new JpaCommunityException(INVALID_PARAMETER);
             }
 
-            categoryEntity.updateOrderIndex(calculateOrderIndex(categoryJpaRepository.findByParentIsNull()));
+            categoryEntity.updateOrderIndex(calculateOrderIndex(categoryRepository.findByParentIsNull()));
         }
 
-        Category savedEntity = categoryJpaRepository.save(categoryEntity);
+        Category savedEntity = categoryRepository.save(categoryEntity);
         return new CategoryResponse(savedEntity);
     }
 
     @Transactional
     public CategoryResponse update(long id, CategoryUpdateRequest categoryUpdateRequest) {
         // 1. 기존 카테고리 조회
-        Category category = categoryRepository.getById(id);
+        Category category = fetchById(id);
 
         // 2. 부모의 children 리스트 갯수로 categoryUpdateRequest orderIndex 값 수정 제한
         Category parent = category.getParent(); // 부모 카테고리 가져오기
@@ -111,12 +105,12 @@ public class CategoryService {
     @Transactional
     public CategoryResponse delete(long id) {
         // 1. 삭제할 엔티티를 조회
-        Category category = categoryQuerydslRepository.getWithSortedChildrenById(id);
+        Category category = categoryRepository.getWithSortedChildrenById(id);
 
         // 연관관계 편의 메서드. 카테고리 순번 재정렬
         if (category.getParent() == null) {
             // 최상위 카테고리 순번 재정렬
-            List<Category> topLevelCategories = categoryJpaRepository.findByParentIsNull(); // 최상위 카테고리 목록 조회
+            List<Category> topLevelCategories = categoryRepository.findByParentIsNull(); // 최상위 카테고리 목록 조회
 
             topLevelCategories.remove(category); // 삭제 대상 제거
             reorderTopLevelCategories(topLevelCategories); // 카테고리의 orderIndex 재정렬
@@ -127,7 +121,7 @@ public class CategoryService {
         }
 
         // 2. 하위 카테고리 존재 여부 확인
-        if (categoryJpaRepository.existsByParentId(id)) {
+        if (categoryRepository.existsByParentId(id)) {
             log.debug("하위 카테고리 존재하여 삭제가 불가능 합니다. id : {}", id);
             throw new JpaCommunityException(RESOURCE_CONFLICT);
         }
@@ -136,29 +130,31 @@ public class CategoryService {
         CategoryResponse response = new CategoryResponse(category);
 
         // 4. 삭제
-        categoryJpaRepository.delete(category);
+        categoryRepository.delete(category);
 
         // 5. 삭제된 DTO 반환
         return response;
     }
 
-    public CategoryResponse getById(long id) {
-        return categoryRepository.findById(id)
-                .map(CategoryResponse::new) // Optional이 유효한 경우 CategoryResponse로 변환
-                .orElseThrow(() -> new JpaCommunityException(RESOURCE_NOT_FOUND)); // Optional이 비어 있으면 예외 발생
+    // CategoryResponse 로 변환하여 반환
+    public CategoryResponse getById(Long id) {
+        return new CategoryResponse(fetchById(id));
     }
 
+    // JPQL
     public CategoryResponse getWithSortedChildrenById(Long id) {
-        return new CategoryResponse(categoryQuerydslRepository.getWithSortedChildrenById(id));
+        return new CategoryResponse(categoryRepository.getWithSortedChildrenById(id));
     }
 
+    // JPQL
     public List<CategoryResponse> getRootCategories() {
-        final List<Category> all = categoryQuerydslRepository.listSortedRootCategories();
+        final List<Category> all = categoryRepository.listSortedRootCategories();
         return all.stream().map(CategoryResponse::fromWithoutChildren).collect(Collectors.toList());
     }
 
+    // JPQL
     public List<CategoryResponse> getAllCategories() {
-        final List<Category> all = categoryQuerydslRepository.listSortedWithHierarchy();
+        final List<Category> all = categoryRepository.listSortedWithHierarchy();
         return all.stream().map(CategoryResponse::new).collect(Collectors.toList());
     }
 
@@ -169,7 +165,7 @@ public class CategoryService {
      * @throws JpaCommunityException
      */
     public void validateRootForReOrderIndex(CategoryUpdateRequest categoryUpdateRequest) throws JpaCommunityException {
-        List<Category> rootCategories = categoryJpaRepository.findByParentIsNull(); // 최상단 카테고리 목록
+        List<Category> rootCategories = categoryRepository.findByParentIsNull(); // 최상단 카테고리 목록
         int rootCategoriesCount = rootCategories.size(); // 최상단 카테고리 개수
         Integer orderIndex = categoryUpdateRequest.getOrderIndex();
 
@@ -238,5 +234,16 @@ public class CategoryService {
         for (int i = 0; i < category.getChildren().size(); i++) {
             category.getChildren().get(i).updateOrderIndex(i + 1);
         }
+    }
+
+    // 공통 메서드: Category 엔티티를 반환
+    public Category fetchById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new JpaCommunityException(RESOURCE_NOT_FOUND, "id -> " + id + " 는 존재하지 않는 카테고리 입니다"));
+    }
+
+    private Category fetchByParentIdAndOrderIndex(Long parentId, int orderIndex) {
+        return categoryRepository.findByParentIdAndOrderIndex(parentId, orderIndex)
+                .orElseThrow(() -> new JpaCommunityException(RESOURCE_NOT_FOUND, "parentId -> " + parentId + ", orderIndex -> " + orderIndex + " 는 존재하지 않는 카테고리 입니다"));
     }
 }
