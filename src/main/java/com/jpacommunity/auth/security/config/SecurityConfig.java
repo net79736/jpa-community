@@ -111,14 +111,11 @@ public class SecurityConfig {
             );
 
         http
-            .addFilterAt(
-                    new JwtAuthenticationFilter(authenticationManager(), jwtProvider, refreshJpaRepository),
-                    UsernamePasswordAuthenticationFilter.class
-            ) // 로그인 인증 필터
-            .addFilterAfter(
-                        new TokenAuthenticationFilter(jwtProvider),
-                        JwtAuthenticationFilter.class
-            ); // JWT 토큰 검증 필터
+                .addFilterAt(
+                        new JwtAuthenticationFilter(authenticationManager(), jwtProvider, refreshJpaRepository),
+                        UsernamePasswordAuthenticationFilter.class
+                ) // 로그인 인증 필터
+                .addFilterAfter(new TokenAuthenticationFilter(jwtProvider), JwtAuthenticationFilter.class);
 
         // .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class); // JWTFilter 가 먼저 실행되고 LoginFilter 가 실행됨
         // .addFilterAfter(new JWTFilter(jwtUtil), LoginFilter.class); // LoginFilter 가 먼저 실행되고 JWTFilter 가 실행됨
@@ -140,7 +137,9 @@ public class SecurityConfig {
                     .requestMatchers("/api/posts/**").permitAll()       // 테스트용
 
                     .requestMatchers("/api/admin/**").hasAnyAuthority(ADMIN.name())
+
                     .requestMatchers(HttpMethod.GET, "/api/oauth2/members/email/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/members/type/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/me/create").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/members/type/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()

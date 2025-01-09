@@ -1,21 +1,23 @@
 package com.jpacommunity.board.api.controller;
 
 import com.jpacommunity.board.api.controller.response.PostResponse;
-import com.jpacommunity.board.api.dto.AttachmentRequest;
 import com.jpacommunity.board.api.dto.PostCreateRequest;
 import com.jpacommunity.board.api.dto.PostUpdateRequest;
-import com.jpacommunity.board.core.service.AttachmentFileService;
+import com.jpacommunity.board.core.service.AttachmentService;
 import com.jpacommunity.board.core.service.PostService;
 import com.jpacommunity.common.web.response.ResponseDto;
 import com.jpacommunity.global.exception.JpaCommunityException;
+import com.jpacommunity.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.jpacommunity.security.dto.CustomUserDetails;
 
 import java.io.IOException;
 import java.util.List;
@@ -31,14 +33,18 @@ import static com.jpacommunity.global.exception.ErrorCode.IO_EXCEPTION;
 public class PostController {
 
     private final PostService postService;
-    private final AttachmentFileService attachmentFileService;
+    private final AttachmentService attachmentService;
+    private final MemberService memberService;
 
+    // RequestPart 참고
+    // https://devsungwon.tistory.com/entry/Spring-MultipartFile%EC%9D%B4-%ED%8F%AC%ED%95%A8%EB%90%9C-DTO-requestBody%EB%A1%9C-%EC%9A%94%EC%B2%AD%EB%B0%9B%EA%B8%B0-swagger-%EC%9A%94%EC%B2%AD
     // CREATE: 게시글 생성
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<ResponseDto<PostResponse>> create(
             @Valid @RequestPart("postCreateRequest") PostCreateRequest postCreateRequest,
             BindingResult bindingResult,
-            @RequestPart(value = "files", required = false) List<MultipartFile> files
+            @RequestPart(value = "files", required = false) List<MultipartFile> files,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         log.info("PostController create START");
         log.info("PostController create Content : {}", postCreateRequest.getContent());
@@ -47,16 +53,8 @@ public class PostController {
         PostResponse postResponse = null;
 
         try {
-            // 게시물 데이터 작성
-            postResponse = postService.create(postCreateRequest);
-
-            // 첨부파일 업로드
-            if (files != null && !files.isEmpty()) {
-                // 첨부 파일 객체 생성
-                List<AttachmentRequest> attachmentRequests = attachmentFileService.generateAttachmentRequests(postResponse.getId(), files);
-                // 저장
-                attachmentFileService.create(files, attachmentRequests);
-            }
+            postResponse = postService.create(postCreateRequest, userDetails.getPublicId());
+            attachmentService.update(postResponse.getId(), files, null);
         } catch (IOException e) {
             log.error("파일 업로드 도중 I/O 에러가 발생하였습니다. errorMessage: {}", e.getMessage());
             throw new JpaCommunityException(IO_EXCEPTION);
@@ -79,14 +77,19 @@ public class PostController {
         log.info("PostController update START");
         log.info("PostController update ID: {}", id);
         log.info("PostController update Content: {}", postUpdateRequest.getContent());
+        PostResponse postResponse = null;
 
         try {
-            PostResponse postResponse = postService.update(postUpdateRequest);
-            return ResponseEntity.ok(new ResponseDto<>(SUCCESS.getValue(), "게시글 수정 성공", postResponse));
+            // 게시글 정보 업데이트
+            postResponse = postService.update(postUpdateRequest);
+            // 첨부파일 관련 업데이트
+            attachmentService.update(postResponse.getId(), newFiles, deleteFileIds);
         } catch (Exception e) {
             log.error("게시글 수정 도중 에러가 발생하였습니다. errorMessage: {}", e.getMessage());
             throw new JpaCommunityException(INTERNAL_SERVER_ERROR);
         }
+
+        return ResponseEntity.ok(new ResponseDto<>(SUCCESS.getValue(), "게시글 수정 성공", postResponse));
     }
 
     // DELETE: 게시글 삭제

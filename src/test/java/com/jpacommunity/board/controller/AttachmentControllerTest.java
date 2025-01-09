@@ -2,6 +2,7 @@ package com.jpacommunity.board.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jpacommunity.board.api.dto.PostCreateRequest;
+import com.jpacommunity.board.core.service.AttachmentService;
 import com.jpacommunity.member.domain.GenderType;
 import com.jpacommunity.member.domain.MemberRole;
 import com.jpacommunity.member.domain.MemberStatus;
@@ -159,8 +160,6 @@ class AttachmentControllerTest {
         MockMultipartFile m3 = convertToMultipartFile(file3);
         MockMultipartFile m4 = convertToMultipartFile(file4);
 
-        List files = List.of(m1, m2, m3, m4);
-
         // 로그인 요청으로 리프레시 토큰 발급
         mockMvc.perform(MockMvcRequestBuilders.multipart("/api/attachments")
                     .file(m4)
@@ -212,7 +211,6 @@ class AttachmentControllerTest {
 
         // then
     }
-
 
     // END 는 자동 완성 후 커서 위치
     @Test

@@ -36,3 +36,7 @@ INSERT INTO p_categories (id, name, depth, parent_id, order_index) VALUES (23, '
 -- 축구 > e스포츠의 하위 카테고리
 INSERT INTO p_categories (id, name, depth, parent_id, order_index) VALUES (24, 'LCK', 2, 6, 1);
 INSERT INTO p_categories (id, name, depth, parent_id, order_index) VALUES (25, '기타 리그', 2, 6, 2);
+
+
+INSERT INTO p_categories (id, name, depth, parent_id, order_index) VALUES (26, '피구', 0, NULL, 1);
+INSERT INTO p_categories (id, name, depth, parent_id, order_index) VALUES (27, '피구', 0, NULL, 1);
