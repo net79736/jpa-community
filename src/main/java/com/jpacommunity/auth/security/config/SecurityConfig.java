@@ -137,8 +137,11 @@ public class SecurityConfig {
                     .requestMatchers("/api/posts/**").permitAll()       // 테스트용
 
                     .requestMatchers("/api/admin/**").hasAnyAuthority(ADMIN.name())
+
+                    .requestMatchers(HttpMethod.GET, "/api/oauth2/members/email/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/members/type/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/me/create").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/members/type/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasAnyAuthority(ADMIN.name())
                     .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasAnyAuthority(ADMIN.name())

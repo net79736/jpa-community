@@ -1,5 +1,6 @@
 package com.jpacommunity.common.repository;
 
+import com.jpacommunity.common.domain.JpaCommunity;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,8 +21,14 @@ public class AuditorAwareImpl implements AuditorAware<String> {
         }
 
         //사용자 환경에 맞게 로그인한 사용자의 정보를 불러온다.
-        CustomUserDetails userDetails = (CustomUserDetails)authentication.getPrincipal();
-        UUID publicId = userDetails.getPublicId();
+        UUID publicId = null;
+
+        try {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            publicId = userDetails.getPublicId();
+        } catch (Exception e) {
+            return JpaCommunity.NAME.describeConstable();
+        }
 
         return Optional.of(String.valueOf(publicId));
     }

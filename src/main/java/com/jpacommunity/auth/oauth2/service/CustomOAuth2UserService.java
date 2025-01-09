@@ -3,9 +3,12 @@ package com.jpacommunity.auth.oauth2.service;
 import com.jpacommunity.auth.oauth2.response.*;
 import com.jpacommunity.global.exception.ExistingUserAuthenticationException;
 import com.jpacommunity.global.exception.JpaCommunityException;
+import com.jpacommunity.member.domain.MemberStatus;
 import com.jpacommunity.member.domain.MemberType;
 import com.jpacommunity.member.entity.Member;
+import com.jpacommunity.member.entity.Oauth2Member;
 import com.jpacommunity.member.repository.MemberJpaRepository;
+import com.jpacommunity.member.repository.Oauth2MemberJpaRepository;
 import com.jpacommunity.oauth2.dto.CustomOAuth2User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -31,9 +34,11 @@ import static com.jpacommunity.oauth2.constant.OAuth2ServiceProvider.*;
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final MemberJpaRepository memberJpaRepository;
+    private final Oauth2MemberJpaRepository oauth2MemberJpaRepository;
 
-    public CustomOAuth2UserService(MemberJpaRepository memberJpaRepository) {
+    public CustomOAuth2UserService(MemberJpaRepository memberJpaRepository, Oauth2MemberJpaRepository oauth2MemberJpaRepository) {
         this.memberJpaRepository = memberJpaRepository;
+        this.oauth2MemberJpaRepository = oauth2MemberJpaRepository;
     }
 
     @Override
@@ -68,7 +73,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             log.debug("Provider() : {}", oAuth2Response.getProvider());
             log.debug("registrationId : {}", registrationId);
 
-            return createNewMember(oAuth2Response, providerId);
+            return createNewMember(oAuth2Response, providerId); // 우선 Oauth2 사용자 테이블에 저장;
         }
     }
 
@@ -106,7 +111,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         log.debug("Creating new member for providerId: {}", providerId);
 
         UUID publicId = UUID.randomUUID();
-        Member newMember = Member.builder()
+        Oauth2Member newMember = Oauth2Member.builder()
                 .email(oAuth2Response.getEmail())
                 .password(generateRandomPassword())
                 .name(oAuth2Response.getName())
@@ -116,12 +121,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .gender(oAuth2Response.getGender())
                 .birthdate(oAuth2Response.getBirthdate())
                 .publicId(publicId)
-                .status(PENDING)
                 .type(MemberType.fromOAuth2Provider(oAuth2Response.getProvider()))
                 .build();
 
-        memberJpaRepository.save(newMember);
-        return new CustomOAuth2User(oAuth2Response.getEmail(), USER.name(), publicId, newMember.getStatus());
+        oauth2MemberJpaRepository.save(newMember); // OAuth2 사용자 테이블에 보관. 추후 사용자가 추가 항목 기입 후 회원가입 완료하면 일반 사용자 테이블에 저장
+        return new CustomOAuth2User(oAuth2Response.getEmail(), USER.name(), publicId, MemberStatus.PENDING);
     }
 
     /**
@@ -149,7 +153,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         }
     }
 
-    public String maskEmail(String email) {
+    private String maskEmail(String email) {
         if (email == null || !email.contains("@")) {
             throw new IllegalArgumentException("Invalid email address");
         }

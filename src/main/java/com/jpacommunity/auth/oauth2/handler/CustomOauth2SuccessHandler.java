@@ -55,33 +55,32 @@ public class CustomOauth2SuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String role = auth.getAuthority();
         String status = customUserDetails.getStatus().name();
 
-        log.info("onAuthenticationSuccess email: {}", email);
-        log.info("onAuthenticationSuccess role: {}", role);
         //유저확인
-        Member member = memberJpaRepository.findByEmail(email)
-                .orElseThrow(() -> new JpaCommunityException(USER_NOT_FOUND));
-        log.info("onAuthenticationSuccess publicId: {}", member.getPublicId());
-        log.info("onAuthenticationSuccess role: {}", member.getRole());
+        Member member = memberJpaRepository.findByEmail(email).orElse(null);
 
-
-        if (status.equals(PENDING.name())) {
+        if (member == null || status.equals(PENDING.name())) {
             log.warn("PENDING 상태인 경우 로그인이 불가능합니다");
             // X-Refresh-Token
             String refreshToken = jwtProvider.generateToken(TOKEN_CATEGORY_REFRESH, Duration.ofMinutes(5), member.getPublicId(), member.getRole().name(), member.getStatus().name());
             String cookieValue = URLEncoder.encode(TOKEN_PREFIX + refreshToken, StandardCharsets.UTF_8);
 
             response.addCookie(createCookie(REFRESH_TOKEN_KEY, cookieValue, TOKEN_REISSUE_PATH, 5 * 60, true));
-            response.sendRedirect(frontUrl + "?status=" + status);
+            response.sendRedirect(frontUrl + "?status=" + PENDING.name());
             return;
         } else if (status.equals(INACTIVE.name())) {
             log.warn("INACTIVE 상태인 경우 로그인이 불가능합니다");
-            response.sendRedirect(frontUrl + "?status=" + status);
+            response.sendRedirect(frontUrl + "?status=" + INACTIVE.name());
             return;
         } else if (!status.equals(ACTIVE.name())) {
             log.warn("알 수 없는 유저 상태 코드 : " + status);
-            response.sendRedirect(frontUrl + "?status=" + status);
+            response.sendRedirect(frontUrl + "?status=" + ACTIVE.name());
             return;
         }
+
+        log.info("onAuthenticationSuccess publicId: {}", member.getPublicId());
+        log.info("onAuthenticationSuccess role: {}", member.getRole());
+        log.info("onAuthenticationSuccess email: {}", email);
+        log.info("onAuthenticationSuccess role: {}", role);
 
         // Authorization
         String accessToken = jwtProvider.generateToken(TOKEN_CATEGORY_ACCESS, Duration.ofHours(1), member.getPublicId(), member.getRole().name(), member.getStatus().name());
