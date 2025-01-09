@@ -1,5 +1,6 @@
 package com.jpacommunity.auth.security.config;
 
+import com.jpacommunity.auth.oauth2.handler.OAuth2LoginFailureHandler;
 import com.jpacommunity.auth.oauth2.service.CustomOAuth2UserService;
 import com.jpacommunity.auth.security.filter.AuthenticationEntryPointHandler;
 import com.jpacommunity.auth.security.filter.CustomAccessDeniedHandler;
@@ -8,7 +9,6 @@ import com.jpacommunity.auth.security.filter.TokenAuthenticationFilter;
 import com.jpacommunity.jwt.repository.RefreshJpaRepository;
 import com.jpacommunity.jwt.util.JwtProvider;
 import com.jpacommunity.oauth2.handler.CustomOauth2SuccessHandler;
-import com.jpacommunity.oauth2.handler.OAuth2LoginFailureHandler;
 import com.jpacommunity.security.handler.LogoutSuccessHandler;
 import com.jpacommunity.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -137,6 +137,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/posts/**").permitAll()       // 테스트용
 
                     .requestMatchers("/api/admin/**").hasAnyAuthority(ADMIN.name())
+                    .requestMatchers(HttpMethod.GET, "/api/members/type/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/me/create").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
                     .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasAnyAuthority(ADMIN.name())

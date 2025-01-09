@@ -1,8 +1,10 @@
 package com.jpacommunity.member.service;
 
+import com.jpacommunity.common.web.response.ResponseDto;
 import com.jpacommunity.global.exception.JpaCommunityException;
 import com.jpacommunity.jwt.util.JwtProvider;
 import com.jpacommunity.member.controller.response.MemberResponse;
+import com.jpacommunity.member.domain.MemberType;
 import com.jpacommunity.member.dto.create.MemberCreateRequest;
 import com.jpacommunity.member.dto.update.MemberRoleUpdateRequest;
 import com.jpacommunity.member.dto.update.MemberStatusUpdateRequest;
@@ -13,9 +15,12 @@ import com.jpacommunity.member.repository.MemberJpaRepository;
 import com.jpacommunity.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Collections;
 import java.util.List;
@@ -232,5 +237,11 @@ public class MemberService {
         String accessToken = jwtProvider.getAccessToken(authorizationHeader);
         UUID publicId = jwtProvider.getPublicId(accessToken);
         return getByPublicId(publicId);
+    }
+
+    public MemberType getMemberTypeByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .map(Member::getType)
+                .orElse(null);
     }
 }
