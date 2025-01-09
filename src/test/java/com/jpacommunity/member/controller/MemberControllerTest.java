@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlGroup;
 import org.springframework.test.web.servlet.MockMvc;
@@ -111,6 +112,7 @@ class MemberControllerTest {
 
     @Test
     @DisplayName("사용자를 생성한다. 토큰을 전달하지 않으며 permitAll 여부에 따라 API 가 잘 작동 하는지 테스트 한다.")
+    @Rollback(value = false)
     public void user_create_test() throws Exception {
         // given
         MemberCreateRequest memberSaveRequest = MemberCreateRequest.builder()

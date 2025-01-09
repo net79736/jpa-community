@@ -3,12 +3,12 @@ package com.jpacommunity.auth.security.config;
 import com.jpacommunity.auth.oauth2.service.CustomOAuth2UserService;
 import com.jpacommunity.auth.security.filter.AuthenticationEntryPointHandler;
 import com.jpacommunity.auth.security.filter.CustomAccessDeniedHandler;
+import com.jpacommunity.auth.security.filter.JwtAuthenticationFilter;
 import com.jpacommunity.auth.security.filter.TokenAuthenticationFilter;
 import com.jpacommunity.jwt.repository.RefreshJpaRepository;
 import com.jpacommunity.jwt.util.JwtProvider;
 import com.jpacommunity.oauth2.handler.CustomOauth2SuccessHandler;
 import com.jpacommunity.oauth2.handler.OAuth2LoginFailureHandler;
-import com.jpacommunity.security.filter.JwtAuthenticationFilter;
 import com.jpacommunity.security.handler.LogoutSuccessHandler;
 import com.jpacommunity.security.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
@@ -111,14 +111,11 @@ public class SecurityConfig {
             );
 
         http
-            .addFilterAt(
-                    new JwtAuthenticationFilter(authenticationManager(), jwtProvider, refreshJpaRepository),
-                    UsernamePasswordAuthenticationFilter.class
-            ) // 로그인 인증 필터
-            .addFilterAfter(
-                        new TokenAuthenticationFilter(jwtProvider),
-                        JwtAuthenticationFilter.class
-            ); // JWT 토큰 검증 필터
+                .addFilterAt(
+                        new JwtAuthenticationFilter(authenticationManager(), jwtProvider, refreshJpaRepository),
+                        UsernamePasswordAuthenticationFilter.class
+                ) // 로그인 인증 필터
+                .addFilterAfter(new TokenAuthenticationFilter(jwtProvider), JwtAuthenticationFilter.class);
 
         // .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class); // JWTFilter 가 먼저 실행되고 LoginFilter 가 실행됨
         // .addFilterAfter(new JWTFilter(jwtUtil), LoginFilter.class); // LoginFilter 가 먼저 실행되고 JWTFilter 가 실행됨

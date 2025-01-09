@@ -1,6 +1,7 @@
 package com.jpacommunity.member.entity;
 
 import com.jpacommunity.common.domain.Base;
+import com.jpacommunity.common.domain.BaseTime;
 import com.jpacommunity.member.domain.GenderType;
 import com.jpacommunity.member.domain.MemberRole;
 import com.jpacommunity.member.domain.MemberStatus;
@@ -29,7 +30,7 @@ import static com.jpacommunity.member.domain.MemberType.LOCAL;
 @Getter
 @Table(name = "p_members")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends Base {
+public class Member extends BaseTime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
