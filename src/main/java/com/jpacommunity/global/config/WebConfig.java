@@ -12,9 +12,9 @@ import java.util.Arrays;
 public class WebConfig {
 
     private final String[] ALLOWED_ORIGIN = {
-            "http://localhost:3000",
+            "http://localhost:3000", // 실제 아이피 주소를 넣어서 CORS 처리할 수도 있음
             // "http://123.141.189.142:3000",
-            "http://playhive.com:3000",
+            "http://playhive.com:3000", // 프론트 서버 개발자는 host 파일에 localhost 를 http://playhive.com:3000 로 바꿔서 개발하면 된다.
     };
 
 
