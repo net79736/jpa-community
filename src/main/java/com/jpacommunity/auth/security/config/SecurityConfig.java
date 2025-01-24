@@ -202,6 +202,8 @@ public class SecurityConfig {
         // 주의: 보안적으로 민감한 경우 특정 출처만 허용해야 합니다.
         // 예: configuration.addAllowedOriginPattern("http://localhost:3000");
         configuration.addAllowedOrigin(frontUrl); // 모든 IP 주소 허용 (프론트 앤드 IP만 허용 react)
+        configuration.addAllowedOrigin("http://123.141.189.142:3000"); // 실제 아이피 주소를 넣어서 CORS 처리할 수도 있음
+        configuration.addAllowedOrigin("http://playhive.com:3000"); // 프론트 서버 개발자는 host 파일에 localhost 를 http://playhive.com:3000 로 바꿔서 개발하면 된다.
         configuration.setAllowCredentials(true);  // 클라이언트에서 쿠키 요청 허용
         // addExposedHeader("Authorization")는 클라이언트가 서버의 응답에서 특정 헤더를 읽을 수 있도록 노출하는 것
         configuration.addExposedHeader(HEADER_AUTHORIZATION); // 클라이언트가 서버의 응답에서 특정 헤더를 읽을 수 있도록 노출하는 것
